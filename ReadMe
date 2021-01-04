@@ -1,6 +1,2 @@
-참고사항
-20201127 hid.c / hidapi.h 는 참조되지 않습니다.
-
-
-빌드 옵션
+<build>
 gcc -o factorytool common.o device.o firmware.o main.o test.o util.o log.o -lm -ludev -li2c
