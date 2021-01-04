@@ -1,0 +1,166 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <linux/types.h>
+#include <linux/input.h>
+#include <linux/hidraw.h>
+#include <sys/ioctl.h>
+#include "common.h"
+#include "device.h"
+#include "util.h"
+#include "hidapi.h"
+
+int gSetup_Value[DEF_SETUP_LIST_CNT];
+
+int zntx_open_device(char* path)
+{
+    int nRet = -1; 
+
+    if((hid_fd = open(path, O_WRONLY)) < 0)
+    {
+        printf("unable to open %s\n", path);
+        perror("unable to open");
+        goto ERROR;
+    }
+
+    nRet = 0;   //Success!!
+    return nRet;
+ERROR:
+    zntx_close_device();
+    return nRet;
+}
+
+void zntx_close_device()
+{
+    close(hid_fd);
+}
+
+int write_register(u16 address, u16 value)
+{
+    u16 buf[32] = { 0,};
+    int res = 0;
+
+    memset(buf, 0, 64);
+    buf[0] = 0x0006;
+    buf[1] = address;
+    buf[2] = value;
+    
+    return write(hid_fd, buf, 0x12);
+}
+
+
+int write_data(u16 address, u8* value, u16 size)
+{
+    u16 buf[32] = {0,};
+    u8* data_buf = (u8*)buf;
+    int res = 0;
+    buf[0] = 0x0406;
+    buf[1] = address;
+    
+    memcpy(&data_buf[4], value, size);
+    res = write(hid_fd, buf, 18);
+    return res; 
+}
+
+int fw_write_data(u16 reg, u8* value, u16 size)
+{
+    u16 buf[32] = {0,};
+    u8* data_buf = (u8*)buf;
+
+    buf[0] = 0x1006;
+        
+    memcpy(&data_buf[2], value, size);
+    return write(hid_fd, buf, size + sizeof(u16)*1);
+}
+
+u16 read_register(u16 address)
+{
+	u16 buf[32] = { 0,};
+    int error = 0;
+    u16 value = 0;
+    int res = 0;
+    
+    memset(buf, 0x0, sizeof(buf)/2);
+    buf[0] = 0x0106;
+    buf[1] = address;
+
+    /* Set Feature */
+	res = ioctl(hid_fd, HIDIOCSFEATURE(18), buf);
+	if (res < 0)
+		perror("HIDIOCSFEATURE");
+
+	/* Get Feature */
+	memset(buf, 0x0, sizeof(buf)/2);
+	buf[0] = 0x0006; /* Report Number */
+    res = ioctl(hid_fd, HIDIOCGFEATURE(6), buf);
+	if (res < 0)
+		perror("HIDIOCGFEATURE");
+    else
+        value = buf[2];
+
+    return value;
+}
+
+u16 read_vendor_data(u16 reg_addr, u8* inbuf, u16 insize    )
+{
+	u16 nRet = 0;
+	u16 buf[32] = { 0,};
+    int  i = 0;
+	int res = 0;
+	buf[0] = 0x0106;
+    buf[1] = reg_addr;
+    
+    memset(inbuf, 0, insize);
+	/* Set Feature */
+	res = ioctl(hid_fd, HIDIOCSFEATURE(18), buf);
+	if (res < 0)
+		perror("HIDIOCSFEATURE");
+
+	/* Get Feature */
+	memset(buf, 0x0, sizeof(buf)/2);
+	buf[0] = 0x0106; /* Report Number */
+	res = ioctl(hid_fd, HIDIOCGFEATURE(insize+2), buf);
+	if (res < 0)
+		perror("HIDIOCGFEATURE");
+    else
+        memcpy(inbuf, (u8 *)&buf[1], insize);
+    
+	return nRet;
+}
+
+int get_mode()
+{
+    int nRet = 0;
+    int res = 0;
+    char buf[64];
+    	/* Get Feature */
+	memset(buf, 0x0, sizeof(buf));
+	buf[0] = 0x04; /* Report Number */
+	buf[1] = 0x01; /* Report Number */
+	buf[2] = 0x04; /* Report Number */
+	buf[3] = 0x00; /* Report Number */
+	res = ioctl(hid_fd, HIDIOCGFEATURE(2), buf);
+	if (res < 0) {
+		perror("HIDIOCGFEATURE");
+	} else {
+        nRet = (int)buf[1];
+	}
+}
+
+int set_mode(int mode)
+{
+    char buf[64];
+    int res = 0;
+
+    /* Set Feature */
+	memset(buf, 0x0, sizeof(buf));
+	buf[0] = 0x04; /* Report Number */
+	buf[1] = (char)mode & 0xFF;
+	
+	res = ioctl(hid_fd, HIDIOCSFEATURE(2), buf);
+	if (res < 0)
+		perror("HIDIOCSFEATURE");
+
+    return 0;
+}
