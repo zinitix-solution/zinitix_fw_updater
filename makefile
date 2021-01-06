@@ -1,5 +1,5 @@
 Zinitix_FWupdate : device.o firmware.o main.o util.o hid.o
-	gcc -o zinitix_fw_updater device.o firmware.o main.o util.o hid.o -lm -ludev
+	gcc -o Zinitix_FWupdate device.o firmware.o main.o util.o hid.o -lm -ludev
 
 device.o : device_hid.c
 	gcc -c -o device.o device_hid.c
@@ -17,4 +17,4 @@ util.o : util.c
 	gcc -c -o util.o util.c
 
 clean:
-	rm *.o zinitix_fw_updater
+	rm *.o Zinitix_FWupdate
