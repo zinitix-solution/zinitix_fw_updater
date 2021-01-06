@@ -19,7 +19,6 @@ int zntx_open_device(char* path)
 
     if((hid_fd = open(path, O_WRONLY)) < 0)
     {
-        printf("unable to open %s\n", path);
         perror("unable to open");
         goto ERROR;
     }

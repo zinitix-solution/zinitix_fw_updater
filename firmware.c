@@ -566,7 +566,7 @@ int get_version()
 	pre_fw_ver_minor = read_register(0x0121);
 	pre_fw_ver_release = read_register(0x0013);
 
-	sprintf(result_buff + strlen(result_buff), "firmware version : %02X%02X\n", pre_fw_ver_minor, pre_fw_ver_release);
+	sprintf(result_buff + strlen(result_buff), "%02X%02X\n", pre_fw_ver_minor, pre_fw_ver_release);
 	printf("%s",result_buff);
 
 	return 0;
@@ -601,7 +601,7 @@ int get_bin_version(char* path)
 	pre_fw_ver_minor = bin_info.val.minor_ver;
 	pre_fw_ver_release = bin_info.buff16[release_ver_address/2 + 0x13];
 	
-	sprintf(result_buff + strlen(result_buff), "firmware(bin) version : %02X_%02X_0x%04X\n", pre_fw_ver_major, pre_fw_ver_minor, pre_fw_ver_release);
+	sprintf(result_buff + strlen(result_buff), "%02X%02X\n", pre_fw_ver_minor, pre_fw_ver_release);
 	printf("%s",result_buff);
 	return 0;
 }
