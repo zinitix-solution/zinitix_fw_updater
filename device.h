@@ -1,3 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Zinitix Firmware Updater
+ *
+ * Copyright (c) 2021 KwangDeok Son <kdson@zinitix.com>
+ * Copyright (c) 2021 Zinitix Solution 
+ *
+ *  The code may be used by anyone for any purpose, 
+ * and can firmware update for Zinitix's touchpad.
+ */
+
 #ifndef DEVICE_H
 #define DEVICE_H
 

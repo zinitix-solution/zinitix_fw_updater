@@ -1,3 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Zinitix Firmware Updater
+ *
+ * Copyright (c) 2021 KwangDeok Son <kdson@zinitix.com>
+ * Copyright (c) 2021 Zinitix Solution 
+ *
+ *  The code may be used by anyone for any purpose, 
+ * and can firmware update for Zinitix's touchpad.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,7 +20,7 @@
 #include "common.h"
 #include "device.h"
 #include "util.h"
-#include "hidapi.h"
+//#include "hidapi.h"
 
 int gSetup_Value[DEF_SETUP_LIST_CNT];
 
