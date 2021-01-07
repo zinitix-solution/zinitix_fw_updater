@@ -9,6 +9,7 @@
 #include "common.h"
 #include "device.h"
 #include "firmware.h"
+
 int main(int argc, char **argv)
 {
     unsigned long nArgCmd = 0;
@@ -22,9 +23,17 @@ int main(int argc, char **argv)
         err = -EINVAL;
         goto WORK_END;
     }
-    //printf("Parameter[%s][%s]!!", argv[1], argv[2]);
 
-    nArgCmd = strtoul(argv[1], NULL, 10);
+    if(0 == strcmp(argv[1], "--get_current_version"))
+    {
+		printf("Zinitix Touchpad Firmware Version : ");
+		nArgCmd = 1;
+		argv[2] = "/dev/hidraw0";
+    }
+    else
+    {
+    	nArgCmd = strtoul(argv[1], NULL, 10);
+    }
 
     if(nArgCmd == 2)
     {
@@ -32,7 +41,7 @@ int main(int argc, char **argv)
         goto WORK_END;
     }
     
-    //장치 Open
+    //Device Open
 	if(zntx_open_device(argv[2]) < 0)
 	{
 		printf(ANSI_COLOR_RED "[ZNTX]Failed Open Device!!" ANSI_COLOR_RESET "\n");
@@ -40,7 +49,6 @@ int main(int argc, char **argv)
         goto WORK_END;
 	}
 
-    //파라미터에 따른 버전체크 / 펌웨어 업데이트 구분 진행
     switch(nArgCmd)
     {
         case 1:
@@ -50,8 +58,6 @@ int main(int argc, char **argv)
             //get_bin_version(argv[2]);
             break;
         case 32:
-            //펌웨어 업데이트
-            printf("firmware bin path[%s]!!", argv[3]);
             err = update_firmware(argv[3]);
             break;
         default:

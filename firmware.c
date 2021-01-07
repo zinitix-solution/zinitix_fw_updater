@@ -251,10 +251,8 @@ bool Firmware_Update(unsigned char* file_path)
 	GetFirmwareInfo(bin_info, &info_size, &core_size, &cust_size, &regi_size);
 	release_ver_address = info_size+core_size+cust_size;
 	release_ver = (u16)bin_info->buff16[release_ver_address/2 + 0x13];
-	printf("Current firmware version major = %04X, minor = %04X, release = %04X\n"
-			, fw_ver_major, fw_ver_minor, fw_ver_release);
-	printf("  New	firmware version major = %04X, minor = %04X, release = %04X\n"
-			, bin_info->val.major_ver, bin_info->val.minor_ver, release_ver);
+	printf("Current firmware version %02X%02X\n", fw_ver_minor, fw_ver_release);
+	printf("  New	firmware version %02X%02X\n", bin_info->val.minor_ver, release_ver);
 	printf("\n\n");
 
 	if(fw_ver_minor != bin_info->val.minor_ver)
@@ -467,13 +465,12 @@ FW_DOWNLOAD_INIT:
 	check_sum = read_register(0x012C);
 
 	printf("\n\n");
-	printf("Previous firmware version : major = %02X, minor = %02X, release = %02X\n", pre_fw_ver_major, pre_fw_ver_minor, pre_fw_ver_release);
-	printf("Current  firmware version : major = %02X, minor = %02X, release = %02X\n", fw_ver_major, fw_ver_minor, fw_ver_release);	
+	printf("Previous firmware version : %02X%02X\n", pre_fw_ver_minor, pre_fw_ver_release);
+	printf("Current  firmware version : %02X%02X\n", fw_ver_minor, fw_ver_release);	
 
 	if(fw_ver_major == bin_info->val.major_ver && fw_ver_minor == bin_info->val.minor_ver && fw_ver_release == release_ver
 	&& fw_ver_major != 0 && fw_ver_minor != 0 && fw_ver_release != 0)
 	{
-        printf("Firmware version read Success!\n\n");
 		pass_or_fail = 1;
 	}
 	else
@@ -507,12 +504,11 @@ FW_DOWNLOAD_INIT:
 		}
     }
 
-	printf("Current  Checksum version : 0x%X\n", check_sum);
+	//printf("Current  Checksum version : 0x%X\n", check_sum);
 	printf(ANSI_COLOR_GREEN "Firmware Upgrade Success!\n\n" ANSI_COLOR_RESET);
 
 	set_mode(nCurrentMode);
-	printf(ANSI_COLOR_GREEN "Set Feature Recovery Mode !\n\n" ANSI_COLOR_RESET);
-    return true;
+    	return true;
 
 FW_DOWNLOAD_FAIL:
 	if(err_msg[0] != 0)
@@ -539,11 +535,11 @@ int update_firmware(unsigned char* bin_file_path)
 	//Check File exist!!!
 	if( access( bin_file_path, F_OK ) != -1 ) {
     // file exists
-        printf("file exists!!!\n");
+        printf("Checked the Firmware File");
         //verify firmware bin
     } else {
         // file doesn't exist
-        printf("file doesn't exist!!!\n");
+        printf("Could not checked the  Firmware file!!!\n");
         //do not firmware update!!!
         return -ENOENT;
     }
