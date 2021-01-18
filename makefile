@@ -1,19 +1,27 @@
 CC = gcc
+CFLAGS=-g -Wall
+LDFLAGS=-lm -ludev
+OBJS= device.o firmware.o main.o util.o
+TARGET=Zinitix_FWupdate
 
-Zinitix_FWupdate : device.o firmware.o main.o util.o
-	gcc -o Zinitix_FWupdate device.o firmware.o main.o util.o -lm -ludev
-
-device.o : device_hid.c
-	gcc -c -o device.o device_hid.c
-
-firmware.o : firmware.c
-	gcc -c -o firmware.o firmware.c
-
-main.o : main.c
-	gcc -c -o main.o main.c
-
-util.o : util.c
-	gcc -c -o util.o util.c
+all: $(TARGET)
 
 clean:
-	rm *.o Zinitix_FWupdate
+	rm -f *.o
+	rm -f $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) -o $@ $(OBJS)
+
+device.o : device.c
+	$(CC) -c -o device.o device.c
+
+firmware.o : firmware.c
+	$(CC) -c -o firmware.o firmware.c
+
+main.o : main.c
+	$(CC) -c -o main.o main.c
+
+util.o : util.c
+	$(CC) -c -o util.o util.c
+
