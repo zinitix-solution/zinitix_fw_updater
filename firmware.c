@@ -57,7 +57,6 @@ bool Firmware_Update_Core( unsigned char* firmware_bin, unsigned char* verify_da
 {
 	u16 Bootloader_ver;
 
-	u8 cmd_pkg[20];
 	int i;
 	int flash_addr;
 	int page_sz = 1024; 
@@ -544,7 +543,7 @@ int update_firmware(unsigned char* bin_file_path)
     int nRet = 0;
 
 	//Check File exist!!!
-	if( access( bin_file_path, F_OK ) != -1 ) {
+	if( access( (const char*)bin_file_path, F_OK ) != -1 ) {
     // file exists
         printf("Checked the Firmware File");
         //verify firmware bin
@@ -584,7 +583,6 @@ int get_bin_version(char* path)
 	FILE* fp = NULL;
 	fw_binary_info bin_info;
 	char result_buff[256] = "";
-	short release = 0;
 	u32 release_ver_address = 0;
 	vu32 info_size; 
 	vu32 core_size;

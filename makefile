@@ -1,3 +1,5 @@
+CC = gcc
+
 Zinitix_FWupdate : device.o firmware.o main.o util.o
 	gcc -o Zinitix_FWupdate device.o firmware.o main.o util.o -lm -ludev
 

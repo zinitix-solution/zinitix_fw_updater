@@ -49,7 +49,6 @@ void zntx_close_device()
 int write_register(u16 address, u16 value)
 {
     u16 buf[32] = { 0,};
-    int res = 0;
 
     memset(buf, 0, 64);
     buf[0] = 0x0006;
@@ -87,11 +86,10 @@ int fw_write_data(u16 reg, u8* value, u16 size)
 u16 read_register(u16 address)
 {
 	u16 buf[32] = { 0,};
-    int error = 0;
     u16 value = 0;
     int res = 0;
     
-    memset(buf, 0x0, sizeof(buf)/2);
+    memset(buf, 0x0, sizeof(u16)*32);
     buf[0] = 0x0106;
     buf[1] = address;
 
@@ -101,7 +99,7 @@ u16 read_register(u16 address)
 		perror("HIDIOCSFEATURE");
 
 	/* Get Feature */
-	memset(buf, 0x0, sizeof(buf)/2);
+	memset(buf, 0x0, sizeof(u16)*32);
 	buf[0] = 0x0006; /* Report Number */
     res = ioctl(hid_fd, HIDIOCGFEATURE(6), buf);
 	if (res < 0)
@@ -116,7 +114,6 @@ u16 read_vendor_data(u16 reg_addr, u8* inbuf, u16 insize    )
 {
 	u16 nRet = 0;
 	u16 buf[32] = { 0,};
-    int  i = 0;
 	int res = 0;
 	buf[0] = 0x0106;
     buf[1] = reg_addr;
@@ -128,13 +125,17 @@ u16 read_vendor_data(u16 reg_addr, u8* inbuf, u16 insize    )
 		perror("HIDIOCSFEATURE");
 
 	/* Get Feature */
-	memset(buf, 0x0, sizeof(buf)/2);
+	memset(buf, 0x0, sizeof(u16)*32);
 	buf[0] = 0x0106; /* Report Number */
 	res = ioctl(hid_fd, HIDIOCGFEATURE(insize+2), buf);
 	if (res < 0)
-		perror("HIDIOCGFEATURE");
+    {
+        perror("HIDIOCGFEATURE");
+    }
     else
+    {
         memcpy(inbuf, (u8 *)&buf[1], insize);
+    }
     
 	return nRet;
 }
@@ -156,6 +157,8 @@ int get_mode()
 	} else {
         nRet = (int)buf[1];
 	}
+
+    return nRet;
 }
 
 int set_mode(int mode)

@@ -24,7 +24,6 @@
 int main(int argc, char **argv)
 {
     unsigned long nArgCmd = 0;
-    unsigned long value = 0;
     int err = 0;
 	
     //파라미터가 없으면 종료한다.
@@ -69,7 +68,7 @@ int main(int argc, char **argv)
             //get_bin_version(argv[2]);
             break;
         case 32:
-            err = update_firmware(argv[3]);
+            err = update_firmware((unsigned char*)argv[3]);
             break;
         default:
             printf("Please Check Your Parameter[%ld][%s][%s]!!", nArgCmd, argv[1], argv[2]);
