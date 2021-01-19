@@ -156,6 +156,8 @@ int get_mode()
 	} else {
         nRet = (int)buf[1];
 	}
+
+    return nRet;
 }
 
 int set_mode(int mode)

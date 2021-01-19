@@ -4,7 +4,7 @@ objects := device.o \
            main.o \
 		   util.o
 libraries := stdc++ rt pthread
-executable_path := ./bin
+executable_path := ./bin/
 source_path := ./src
 include_path := ./include 
 
@@ -29,7 +29,8 @@ vpath %.cpp $(source_path)
 all: $(objects)
 	$(CXX) $^ $(CXXFLAGS) $(INC_FLAGS) $(LIB_FLAGS) -o $(program)
 	@chmod 777 $(program)
-	#@mv $(program) $(executable_path)
+	@mkdir $(executable_path)
+	@mv $(program) $(executable_path)
 	@rm -rf $^
 	
 %.o: %.cpp
@@ -37,7 +38,7 @@ all: $(objects)
 	
 .PHONY: clean
 clean: 
-	@rm -rf $(program) $(objects)
+	@rm -rf $(executable_path) $(objects)
 #device.o : device.c
 #firmware.o : firmware.c
 #main.o : main.c

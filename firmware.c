@@ -219,7 +219,7 @@ bool Firmware_Update(unsigned char* file_path)
 	u16 u16_lsb, u16_msb;
 	u32 info_checksum;
 	u32 core_checksum;
-
+	int err = 0;
 	int nCurrentMode = 0;
 
 	if(gSetup_Value[PRODUCT_ID] == 0x650E)
@@ -255,7 +255,7 @@ bool Firmware_Update(unsigned char* file_path)
     }
 	
     fseek(fp, 0, SEEK_SET);
-    fread(firmware_bin, 1, FW_BUFF_SIZE_650, fp);
+    err = fread(firmware_bin, 1, FW_BUFF_SIZE_650, fp);
     fclose(fp);
 
 	bin_info = (fw_binary_info *)firmware_bin;
@@ -544,7 +544,7 @@ int update_firmware(unsigned char* bin_file_path)
     int nRet = 0;
 
 	//Check File exist!!!
-	if( access( bin_file_path, F_OK ) != -1 ) {
+	if( access( (const char *)bin_file_path, F_OK ) != -1 ) {
     // file exists
         printf("Checked the Firmware File");
         //verify firmware bin
@@ -589,6 +589,7 @@ int get_bin_version(char* path)
 	vu32 info_size; 
 	vu32 core_size;
 	vu32 custom_size;
+	int err = 0;
 
 	// firmware read
     fp = fopen(path, "rb");
@@ -598,7 +599,7 @@ int get_bin_version(char* path)
     }
     
     fseek(fp, 0, SEEK_SET);
-    fread(&bin_info, 1, sizeof(fw_binary_info), fp);
+    err = fread(&bin_info, 1, sizeof(fw_binary_info), fp);
     fclose(fp);
 
 	GetFirmwareInfo((unsigned char *)&bin_info, &info_size, &core_size, &custom_size, NULL);
