@@ -140,7 +140,7 @@ FW_DOWNLOAD_INFO:
 
     printf("\n");
 
-	if(FW_VERIFY_ON)
+	if(1)
 	{
 		for (flash_addr = 0; flash_addr < info_size + core_size; )
 	    {

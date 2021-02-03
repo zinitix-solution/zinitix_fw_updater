@@ -13,7 +13,7 @@
 #define FIRMWARE_H
 
 #include <stdbool.h>
-#define FW_VERIFY_ON		0
+#define FW_VERIFY_ON		1
 #define FW_BUFF_SIZE        (1024*48) // 48K
 #define FW_BUFF_SIZE_650    (1024*128) // 128K
 #define TC_SECTOR_SZ		(8 * 2)
