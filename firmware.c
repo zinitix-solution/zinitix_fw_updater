@@ -140,7 +140,7 @@ FW_DOWNLOAD_INFO:
 
     printf("\n");
 
-	if(1)
+	if(FW_VERIFY_ON)
 	{
 		for (flash_addr = 0; flash_addr < info_size + core_size; )
 	    {
@@ -411,7 +411,7 @@ FW_DOWNLOAD_INIT:
 
     printf("\n");
 
-	if(gSetup_Value[FW_VERIFY_TYPE] == 0)
+	if(gSetup_Value[FW_VERIFY_TYPE] == 0 && FW_VERIFY_ON)
 	{
 		flash_start_addr = (info_size + core_size);
 		flash_addr = 0;
