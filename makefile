@@ -1,34 +1,43 @@
-CC = gcc
-CFLAGS=-g -Wall
-LDFLAGS=-lm -ludev
-OBJS= device.o firmware.o main.o util.o
-TARGET=Zinitix_FWupdate
+program := Zinitix_FWupdate
+objects := device.o \
+		   firmware.o \
+           main.o \
+		   util.o
+libraries := stdc++ rt pthread
+source_path := ./src
+include_path := ./include 
 
-all: $(TARGET)
+CXX ?= g++ # Compiler: GCC C++ Compiler
+#CXX ?= arm-none-linux-gnueabi-g++ # Compiler: arm cross compiler
+CXXFLAGS = -Wall -ansi -O3 -g
+CXXFLAGS += -D__ENABLE_DEBUG__
+CXXFLAGS += -D__ENABLE_OUTBUF_DEBUG__
+CXXFLAGS += -D__ENABLE_INBUF_DEBUG__
+CXXFLAGS += -D__ENABLE_LOG_FILE_DEBUG__
+#CXXFLAGS += -D__ENABLE_SYSLOG_DEBUG__
+CXXFLAGS += -static
+INC_FLAGS += $(addprefix -I, $(include_path))
+LIB_FLAGS += $(addprefix -l, $(libraries))
+VPATH = $(include_path)
+vpath %.h $(include_path)
+vpath %.c $(source_path)
+vpath %.cpp $(source_path)
+.SUFFIXS: .c .cpp .h
 
-clean:
-	rm -f *.o
-	rm -f $(TARGET)
-
-$(TARGET): $(OBJS)
-	$(CC) -o $@ $(OBJS)
-
-%.o:%.c $(INC_H_FILES)
-	@echo $(CC) -M $(CFLAGS) $(CPPFLAGS) $(DEFINES) $(INCPATH) $<
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $(DEFINES) $(INCPATH) $< -o $@
-
-%.o:%.cpp $(INC_H_FILES)
-	@echo $(CXX) -M $(CXXFLAGS) $(CPPFLAGS) $(DEFINES) $(INCPATH) $<
-	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) $(DEFINES) $(INCPATH) $< -o $@
+.PHONY: all
+all: $(objects)
+	$(CXX) $^ $(CXXFLAGS) $(INC_FLAGS) $(LIB_FLAGS) -o $(program)
+	@chmod 777 $(program)
+	@rm -rf $^
+	
+%.o: %.cpp
+	$(CXX) -c $< $(CXXFLAGS) $(INC_FLAGS) $(LIB_FLAGS)
+	
+.PHONY: clean
+clean: 
+	@rm -rf $(executable_path) $(objects)
+	@rm -rf $(program)
 #device.o : device.c
-#	$(CC) -c -o device.o device.c
-
 #firmware.o : firmware.c
-#	$(CC) -c -o firmware.o firmware.c
-
 #main.o : main.c
-#	$(CC) -c -o main.o main.c
-
 #util.o : util.c
-#	$(CC) -c -o util.o util.c
-
