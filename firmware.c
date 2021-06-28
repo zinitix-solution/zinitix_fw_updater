@@ -533,7 +533,7 @@ void initialize_global()
 {
     memset(gSetup_Value, 0, sizeof(gSetup_Value));
     gSetup_Value[VENDOR_ID] = 0x14E5;		// JOAN ID
-    gSetup_Value[PRODUCT_ID] = 0xE650;		// JOAN ID
+    gSetup_Value[PRODUCT_ID] = read_register(0x0120);
     gSetup_Value[WRITE_FW_DELAY] = 15;
 }
 
