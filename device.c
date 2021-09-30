@@ -16,19 +16,31 @@
 #include <linux/types.h>
 #include <linux/input.h>
 #include <linux/hidraw.h>
+#include <linux/limits.h>
 #include <sys/ioctl.h>
+#include <dirent.h>
+
 #include "common.h"
 #include "device.h"
 #include "util.h"
-//#include "hidapi.h"
 
 int gSetup_Value[DEF_SETUP_LIST_CNT];
 
 int zntx_open_device(char* path)
 {
     int nRet = -1; 
+    char devPath[PATH_MAX] = {0,};
+    char* openPath = path;
 
-    if((hid_fd = open(path, O_WRONLY)) < 0)
+    if(path == NULL)
+    {
+        if(0 == zntx_find_devpath(devPath))
+            openPath = devPath;
+        else
+            return nRet;
+    }
+
+    if((hid_fd = open(openPath, O_WRONLY)) < 0)
     {
         perror("unable to open");
         goto ERROR;
@@ -176,4 +188,41 @@ int set_mode(int mode)
 		perror("HIDIOCSFEATURE");
 
     return 0;
+}
+
+int zntx_find_devpath(char* deviceFile)
+{
+    struct dirent * devDirEntry;
+	DIR * devDir;
+    int nRet = -1;
+
+    devDir = opendir("/dev");
+	if(!devDir)
+	    return -1;
+
+	while((devDirEntry = readdir(devDir)) != NULL)
+	{
+        if(strstr(devDirEntry->d_name, "hidraw"))
+        {
+            char rawDevice[PATH_MAX];
+            strncpy(rawDevice, devDirEntry->d_name, PATH_MAX);
+            snprintf(deviceFile, PATH_MAX, "/dev/%s", devDirEntry->d_name);
+            if((hid_fd = open(deviceFile, O_WRONLY)) < 0)
+            {
+                printf("##unable to open %s\n", deviceFile);
+                continue;
+            }
+            else
+            {
+                u16 value = read_register(0x0120);
+                if(value == 0xE650 || value == 0x650E)
+                {
+                    nRet = 0;   //Success!!
+                    break;
+                }
+                continue;
+            }        
+        }
+	}
+    return nRet;
 }

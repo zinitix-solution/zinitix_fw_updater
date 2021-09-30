@@ -38,7 +38,6 @@ int main(int argc, char **argv)
     {
 		printf("Zinitix Touchpad Firmware Version : ");
 		nArgCmd = 1;
-		argv[2] = "/dev/hidraw0";
     }
     else
     {
@@ -61,6 +60,9 @@ int main(int argc, char **argv)
 
     switch(nArgCmd)
     {
+        case 0:
+            printf("App Version %d %d\n", APP_MAJOR_VERSION, APP_MINOR_VERSION);
+            break;
         case 1:
             get_version();
             break;
