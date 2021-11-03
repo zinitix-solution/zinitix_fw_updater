@@ -39,13 +39,12 @@ int zntx_open_device(char* path)
         else
             return nRet;
     }
-
     if((hid_fd = open(openPath, O_WRONLY)) < 0)
     {
         perror("unable to open");
         goto ERROR;
     }
-
+    path = openPath;
     nRet = 0;   //Success!!
     return nRet;
 ERROR:
@@ -195,7 +194,7 @@ int zntx_find_devpath(char* deviceFile)
     struct dirent * devDirEntry;
 	DIR * devDir;
     int nRet = -1;
-
+    
     devDir = opendir("/dev");
 	if(!devDir)
 	    return -1;
