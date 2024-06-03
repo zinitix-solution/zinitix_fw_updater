@@ -23,6 +23,7 @@
 #include "common.h"
 #include "device.h"
 #include "util.h"
+//#include "hidapi.h"
 
 int gSetup_Value[DEF_SETUP_LIST_CNT];
 
@@ -101,7 +102,7 @@ u16 read_register(u16 address)
     int res = 0;
     
     memset(buf, 0x0, sizeof(u16)*32);
-    buf[0] = 0x0106;
+    buf[0] = 0x0006;
     buf[1] = address;
 
     /* Set Feature */
@@ -112,16 +113,44 @@ u16 read_register(u16 address)
 	/* Get Feature */
 	memset(buf, 0x0, sizeof(u16)*32);
 	buf[0] = 0x0006; /* Report Number */
-    res = ioctl(hid_fd, HIDIOCGFEATURE(6), buf);
+    res = ioctl(hid_fd, HIDIOCGFEATURE(6+2), buf);
 	if (res < 0)
 		perror("HIDIOCGFEATURE");
     else
         value = buf[2];
-
+   /*  printf("mark1 : [%X][%X][%X][%X][%X]\n", buf[0], buf[1], buf[2], buf[3], buf[4]); */
     return value;
 }
 
-u16 read_vendor_data(u16 reg_addr, u8* inbuf, u16 insize    )
+int read_data(u16 address, u8* inbuf, u16 insize)
+{
+	u16 buf[32] = { 0,};
+    int error = 0;
+    int res = 0;
+    
+	memset(inbuf, 0, insize);
+    memset(buf, 0x0, sizeof(buf)/2);
+    buf[0] = 0x0106;
+    buf[1] = address;
+
+    /* Set Feature */
+	res = ioctl(hid_fd, HIDIOCSFEATURE(18), buf);
+	if (res < 0)
+		perror("HIDIOCSFEATURE");
+
+	/* Get Feature */
+	memset(buf, 0x0, sizeof(buf)/2);
+	buf[0] = 0x0006; /* Report Number */
+    res = ioctl(hid_fd, HIDIOCGFEATURE(insize + 2), buf);
+	if (res < 0)
+		perror("HIDIOCGFEATURE");
+    else
+		memcpy(inbuf, (u8 *)&buf[1], insize);
+
+    return res;
+}
+
+u16 read_vendor_data(u16 reg_addr, u8* inbuf, u16 insize)
 {
 	u16 nRet = 0;
 	u16 buf[32] = { 0,};

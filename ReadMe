@@ -5,7 +5,9 @@ Please refer to the makefile for how to build.
 
 How to run:
 1. Firmware Update
-Zinitix_FWupdate 32 [device path] [firmware bin path]
-
+Zinitix_FWupdate 33 [device path] [firmware bin path]
+ - previous BD03
+	Zinitix_FWupdate 32 [device path] [firmware bin path]
+	
 2. Check Current Firmware Version
 Zinitix_FWupdate --get_current_version

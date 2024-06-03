@@ -14,5 +14,6 @@
 
 void Sleep(unsigned long mSec);
 int Query_delay(int delay_ms);
-
+void struprs(char* src);
+int	char2dec(char *operand) ;
 #endif

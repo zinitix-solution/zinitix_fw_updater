@@ -18,6 +18,13 @@
 #define APP_MINOR_VERSION 3
 
 //define
+//test
+#define DEF_CH_X_NUM	40
+#define DEF_CH_Y_NUM	40
+#define DEF_TOTAL_CH_NUM	(DEF_CH_X_NUM*DEF_CH_Y_NUM)
+
+#define	MAX_REGISTER_COUNT	                    0x400	// 2kb
+
 typedef unsigned char 	u8;
 typedef unsigned short 	u16;
 typedef unsigned int 	u32;
@@ -74,9 +81,29 @@ typedef union _fw_binary_info
 	}val;
 }fw_binary_info;
 
+typedef struct
+{
+	short skip_cnt;
+	short sampling_cnt;
+	short filter;
+	// filter : 0(Non)
+	//           1(Max. value)
+	//           2(Min. value)
+	//           3(Average)
+//	short temp;
+}RAWDATA_GATHERING_OPTION;
+
+
 //////////////////////////////
 //main
 #define DEF_SETUP_LIST_CNT 12
+
+//buffer.c
+extern short RAW_DATA[DEF_TOTAL_CH_NUM];
+extern RAWDATA_GATHERING_OPTION RawOption;
+
+
+int TP_Read_Rawdata(int CMD, unsigned long touch_mode, short* buff, int ch_x, int ch_y, RAWDATA_GATHERING_OPTION RawOption);
 
 //////////////////////////////
 //util

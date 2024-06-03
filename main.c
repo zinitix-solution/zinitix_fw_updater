@@ -20,13 +20,19 @@
 #include "common.h"
 #include "device.h"
 #include "firmware.h"
+#include "debugging.h"
+#include "util.h"
 
 int main(int argc, char **argv)
 {
     unsigned long nArgCmd = 0;
+    
+	unsigned long reg = 0;
+    unsigned long value = 0;
     int err = 0;
 	
-    //파라미터가 없으면 종료한다.
+	vs16 vs16_temp;
+    //?ŒŒ?¼ë¯¸í„°ê°? ?—†?œ¼ë©? ì¢…ë£Œ?•œ?‹¤.
     if (argc < 2) 
 	{
         printf("check parameter!!\n");
@@ -38,42 +44,41 @@ int main(int argc, char **argv)
     {
 		printf("Zinitix Touchpad Firmware Version : ");
 		nArgCmd = 1;
+		/* argv[2] = "/dev/hidraw0"; */
     }
     else
     {
     	nArgCmd = strtoul(argv[1], NULL, 10);
     }
 
-    if(nArgCmd == 2)
+   /* if(nArgCmd == 2)
     {
         err = get_bin_version(argv[2]);
         goto WORK_END;
     }
-    
+    */
     //Device Open
 	if(zntx_open_device(argv[2]) < 0)
 	{
-		printf(ANSI_COLOR_RED "[ZNTX]Failed Open Device!!" ANSI_COLOR_RESET "\n");
+		printf(ANSI_COLOR_RED "[ZNTX]Failed Open Device!! : %s" ANSI_COLOR_RESET "\n", argv[2]);
 		err = -ENODEV;
         goto WORK_END;
 	}
 
     switch(nArgCmd)
     {
-        case 0:
-            printf("App Version %d %d\n", APP_MAJOR_VERSION, APP_MINOR_VERSION);
-            break;
-        case 1:
+		case 1:
             get_version();
             break;
         case 2:
             //get_bin_version(argv[2]);
             break;
         case 32:
-            err = update_firmware((unsigned char*)argv[3]);
+		case 33:
+			err = update_firmware(nArgCmd, (unsigned char*)argv[3]);
             break;
         default:
-            printf("Please Check Your Parameter[%ld][%s][%s]!!", nArgCmd, argv[1], argv[2]);
+            printf("\nPlease Check Your Parameter[%ld][%s][%s]!!\n", nArgCmd, argv[1], argv[2]);
             break;    
     }
     zntx_close_device();

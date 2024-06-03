@@ -17,6 +17,7 @@
 #define FW_BUFF_SIZE        (1024*48) // 48K
 #define FW_BUFF_SIZE_650    (1024*128) // 128K
 #define TC_SECTOR_SZ		(8 * 2)
+#define TC_SECTOR_SZ_650	(8 * 2)
 
 #define TO_LITTLE_ENDIAN(n1, n2, n3) (((u32)n1<<16 & 0x00FF0000) | ((u32)n2<<8 & 0x0000FF00) | ((u32)n3 & 0x000000FF))
 
@@ -60,10 +61,20 @@ enum FWUPGRADE_PROGMODE
 	FWUPGRADE_WRITEREPEAT	= 2,
 };
 
+extern u16	fw_ver_major;
+extern u16	fw_ver_minor;
+extern u16	fw_ver_release;
+extern u16	pre_fw_ver_major;
+extern u16	pre_fw_ver_minor;
+extern u16	pre_fw_ver_release;
+extern u16	check_sum;
+
 bool Firmware_Update_Core(unsigned char* firmware_bin, unsigned char* verify_data, char* err_msg, int UseBootload);
 bool Firmware_Update(unsigned char*  file_path);
+bool CLM_Firmware_Update_650_BD03(unsigned char* file_path);
 void initialize_global();
-int update_firmware(unsigned char* bin_file_path);
+int update_firmware(int nArgCmd, unsigned char* bin_file_path);
 int get_version();
 int get_bin_version(char* path);
+int Get_vendor_device();
 #endif
