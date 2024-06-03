@@ -2,10 +2,7 @@ program := Zinitix_FWupdate
 objects := device.o \
 		   firmware.o \
            main.o \
-		   util.o \
-		   debugging.o \
-		   test.o \
-		   buffer.o
+		   util.o
 libraries := stdc++ rt pthread
 source_path := ./src
 include_path := ./include 

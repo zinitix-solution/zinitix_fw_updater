@@ -20,7 +20,6 @@
 #include "common.h"
 #include "device.h"
 #include "firmware.h"
-#include "debugging.h"
 #include "util.h"
 
 int main(int argc, char **argv)

@@ -53,7 +53,7 @@ typedef volatile unsigned int 	vu32;
 #define WRITE_FW_DELAY		10
 
 //vars
-int hid_fd;
+//int hid_fd;
 
 
 //////////////////////////////

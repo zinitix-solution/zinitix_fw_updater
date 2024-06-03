@@ -30,6 +30,8 @@ u16	pre_fw_ver_minor = 0;
 u16	pre_fw_ver_release = 0;
 u16	check_sum = 0;
 
+int hid_fd;
+
 
 bool GetFirmwareInfo(void *firmware_bin, vu32 *info_size, vu32 *core_size, vu32 *custom_size, vu32 *regi_size)
 {
