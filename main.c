@@ -70,7 +70,7 @@ int main(int argc, char **argv)
             get_version();
             break;
         case 2:
-            //get_bin_version(argv[2]);
+            get_bin_version(argv[2]);
             break;
         case 32:
 		case 33:
