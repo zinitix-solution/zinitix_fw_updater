@@ -50,12 +50,12 @@ int main(int argc, char **argv)
     	nArgCmd = strtoul(argv[1], NULL, 10);
     }
 
-   /* if(nArgCmd == 2)
+    if(nArgCmd == 2)
     {
         err = get_bin_version(argv[2]);
         goto WORK_END;
     }
-    */
+	
     //Device Open
 	if(zntx_open_device(argv[2]) < 0)
 	{
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
             get_version();
             break;
         case 2:
-            get_bin_version(argv[2]);
+            /* get_bin_version(argv[2]); */
             break;
         case 32:
 		case 33:
