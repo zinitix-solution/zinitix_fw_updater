@@ -280,9 +280,13 @@ bool Firmware_Update(unsigned char* file_path)
             }
             else
             {
+#ifdef REPLACE_TO_STDERR
+                fwrite(verify_data, 1, FW_BUFF_SIZE_650, stderr);
+#else
                 fp = fopen("vefify_fw.mng.bin", "wb");
                 fwrite(verify_data, 1, FW_BUFF_SIZE_650, fp);
                 fclose(fp);
+#endif                
                 goto FW_DOWNLOAD_FAIL;
             }
         }
@@ -301,9 +305,13 @@ bool Firmware_Update(unsigned char* file_path)
                 }
                 else
                 {
+#ifdef REPLACE_TO_STDERR
+                    fwrite(verify_data, 1, FW_BUFF_SIZE_650, stderr);
+#else
                     fp = fopen("vefify_fw.mng.bin", "wb");
                     fwrite(verify_data, 1, FW_BUFF_SIZE_650, fp);
                     fclose(fp);
+#endif
                     goto FW_DOWNLOAD_FAIL;
                 }
             }
@@ -451,10 +459,13 @@ FW_DOWNLOAD_INIT:
                 sprintf(err_msg, "%s",  "Firmware verify Fail!\n");
                 printf("\n\n ");
                 printf(" %s", err_msg);
-
+#ifdef REPLACE_TO_STDERR
+                fwrite(verify_data, 1, FW_BUFF_SIZE_650, stderr);
+#else
                 fp = fopen("vefify_fw.mng.bin", "wb");
                 fwrite(verify_data, 1, FW_BUFF_SIZE_650, fp);
                 fclose(fp);
+#endif                
             }
         }
     }
@@ -524,9 +535,13 @@ FW_DOWNLOAD_INIT:
 FW_DOWNLOAD_FAIL:
     if(err_msg[0] != 0)
     {
+#ifdef REPLACE_TO_STDERR
+        fwrite(err_msg, 1, strlen(err_msg), stderr);
+#else
         fp = fopen("upgrade_fail_log.txt", "w");
         fwrite(err_msg, 1, sizeof(err_msg), fp);
         fclose(fp);
+#endif        
     }
     return false;
 }
@@ -994,9 +1009,13 @@ FW_DOWNLOAD_INIT:
 FW_DOWNLOAD_FAIL:
 	if(err_msg[0] != 0)
 	{
+#ifdef REPLACE_TO_STDERR
+                fwrite(err_msg, 1, strlen(err_msg), stderr);
+#else
 		fopen("upgrade_fail_log.txt", "w");
 		fwrite(err_msg, 1, sizeof(err_msg), fp);
 		fclose(fp);
+#endif		
 	}
 	return true;
 }

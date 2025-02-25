@@ -38,6 +38,8 @@
 #define F0_ROM_RESET							0x05F0
 #define F0_ROM_RESET_NO_JUMP_MAIN 				0x06F0
 
+#define REPLACE_TO_STDERR
+
 enum FWUPGRADE
 {
 	ENUM_HW_RESET				= 0x8000,
